@@ -13,8 +13,8 @@ def packages():
     # Require some Debian/Ubuntu packages
     require.deb.packages([
         'fswebcam',
+        'python-virtualenv'
     ])
-    sudo("easy_install virtualenv")
 
 @task
 @roles('client')
@@ -24,9 +24,9 @@ def install():
 
     if not exists("rview"):
         run("mkdir rview")
-        run("virtualenv .")
 
     with cd("rview"):
+        run("virtualenv .")
         put("client/tasks.py", home)
         with prefix("source bin/activate"):
             run("pip install requests invoke")

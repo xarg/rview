@@ -3,7 +3,7 @@ env.use_ssh_config = True
 
 env.roledefs = {
     'server': ['rview@q0'],
-    'client': ['pi@rx']
+    'client': ['pi@ry']
 }
 
 import server
