@@ -25,7 +25,7 @@ def setup():
 @roles('server')
 def packages():
     """ Install packages needed for the client """
-    
+
     # Require some Debian/Ubuntu packages
     require.deb.packages([
         'ffmpeg',
@@ -67,6 +67,20 @@ def install():
         stopsignal='INT',
         stdout_logfile='%s/supervisor-rview_encoder.log' % home,
     )
+@task
+@roles('server')
+def tagboard():
+    home = "/home/%s/rview" % env.user
+    put("tagboard.py", home)
+
+    require.supervisor.process('tagboard',
+        command='%s/bin/python tagboard.py' % home,
+        directory=home,
+        user=env.user,
+        stopsignal='INT',
+        stdout_logfile='%s/supervisor-tagboard.log' % home,
+    )
+    sudo("supervisorctl restart tagboard")
 
 @task
 @roles('server')
@@ -99,7 +113,7 @@ def restart():
 
     sudo("supervisorctl restart rview_encoder")
     sudo("supervisorctl restart rview_server")
-    
+
 
 @task
 @roles('server')
@@ -107,4 +121,4 @@ def stop():
     """ Stop """
     sudo("supervisorctl stop rview_encoder")
     sudo("supervisorctl stop rview_server")
- 
+

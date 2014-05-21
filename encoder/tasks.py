@@ -48,8 +48,10 @@ def blur(rects, img, dst):
 
 def modify(src, dst):
     """ Given a source and a destination image path try to blur using opencv"""
-    rects, img = detect(src) 
-    blur(rects, img, dst)
+    run("cp %s %s" % (src, dst))
+
+    #rects, img = detect(src) 
+    #blur(rects, img, dst)
 
 @task
 def encode():
@@ -89,7 +91,7 @@ def encode():
                         fd.write("\n".join(photos))
                     output_path = join(stream_path, stream)
                     encode_cmd = ENCONDE_CMD % {
-                        'fps': 20,
+                        'fps': 24,
                         'out': output_path
                     }
                     run(encode_cmd)

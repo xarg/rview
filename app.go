@@ -45,6 +45,10 @@ func parseBasicAuth(auth string) (username, password string, err error) {
 	return s2[0], s2[1], nil
 }
 
+func indexHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "This service gets a bunch of pictures and generates a timelapse from them.\nAuthor: alex at plugaru d-0-t org")
+}
+
 //uploadHandler - used
 func uploadHandler(w http.ResponseWriter, r *http.Request) {
 	username, password, err := basicAuth(r)
@@ -133,6 +137,7 @@ func main() {
 	flag.Parse()
 
 	http.HandleFunc("/upload", uploadHandler)
+	http.HandleFunc("/", indexHandler)
 	log.Println("Listening on", *addr)
 	http.ListenAndServe(*addr, nil)
 }
