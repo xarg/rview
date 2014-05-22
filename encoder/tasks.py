@@ -13,7 +13,7 @@ logging.basicConfig()
 logger = logging.getLogger("tasks")
 
 MEDIA_PATH = join(os.path.dirname(__file__), "static")
-ENCONDE_CMD = "mencoder -nosound -ovc lavc -lavcopts vcodec=mpeg4:aspect=16/9:vbitrate=8000000 -vf scale=1920:1080 -o %(out)s.avi -mf type=jpeg:fps=%(fps)d mf://@frames.txt"
+ENCONDE_CMD = "mencoder -nosound -ovc lavc -lavcopts vcodec=mpeg4:aspect=16/9:vbitrate=8000000 -vf scale=1920:1080 %(options)s -o %(out)s.avi -mf type=jpeg:fps=%(fps)d mf://@frames.txt"
 
 def sort_by_date(filename):
     datestr, ext = os.path.splitext(os.path.basename(filename))
@@ -90,9 +90,13 @@ def encode():
                     with open("frames.txt", "w+") as fd:
                         fd.write("\n".join(photos))
                     output_path = join(stream_path, stream)
+                    options = ""
+                    if stream == 'iphone4s':
+                        options = "-flip"
                     encode_cmd = ENCONDE_CMD % {
                         'fps': 24,
-                        'out': output_path
+                        'out': output_path,
+                        'options': options
                     }
                     run(encode_cmd)
         except Exception as e:
