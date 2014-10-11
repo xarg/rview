@@ -45,14 +45,15 @@ def install():
         run("mkdir rview")
 
     with cd("rview"):
-        put("app.go", home)
+        run("GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o app.go")
+        put("app", home)
         put("encoder/tasks.py", home)
         run("virtualenv --system-site-packages .")
         run("bin/pip install invoke python-dateutil")
         run("wget https://raw.githubusercontent.com/Itseez/opencv/master/data/haarcascades/haarcascade_frontalface_alt.xml")
 
     require.supervisor.process('rview_server',
-        command='go run %s/app.go' % home,
+        command='%s/app' % home,
         directory=home,
         user=env.user,
         stopsignal='INT',
@@ -108,7 +109,8 @@ def restart():
     home = "/home/%s/rview" % env.user
 
     with cd("rview"):
-        put("app.go", home)
+        run("GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o app.go")
+        put("app", home) 
         put("encoder/tasks.py", home)
 
     sudo("supervisorctl restart rview_encoder")
