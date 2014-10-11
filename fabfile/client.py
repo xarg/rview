@@ -13,7 +13,6 @@ def packages():
     # Require some Debian/Ubuntu packages
     require.deb.packages([
         'fswebcam',
-        'python-virtualenv'
     ])
 
 @task
