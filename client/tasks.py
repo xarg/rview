@@ -9,19 +9,23 @@ from invoke import run, task
 PHOTOS = "photos"
 
 @task
-def start(url="http://rview.io/upload", username=socket.gethostname(), password='', interval=60, directory=PHOTOS):
+def start(ctype="cam", url="http://rview.io/upload", username=socket.gethostname(), password='', interval=60, directory=PHOTOS):
     """Start timelapse
     
     `interval` - in seconds 
 
     """
+    if ctype == 'cam':
+        cmd = "fswebcam --no-banner -r 1920x1080 %s"
+    elif ctype == 'still':
+        cmd = "raspistill --rotation 270 -o %s"
     
     while True:
         files = {}
         try:
             run("mkdir -p photos")
             imagename = os.path.join(directory, "%s.jpg" % datetime.utcnow().isoformat())
-            run("fswebcam --no-banner -r 1920x1080 %s" % imagename)
+            run(cmd % imagename)
 
             count = 0
             for imagefile in os.listdir(directory):

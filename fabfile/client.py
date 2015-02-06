@@ -13,11 +13,12 @@ def packages():
     # Require some Debian/Ubuntu packages
     require.deb.packages([
         'fswebcam',
+        'python-virtualenv'
     ])
 
 @task
 @roles('client')
-def install():
+def install(ctype="cam"):
     execute(packages)
     home = "/home/%s/rview" % env.user
 
@@ -31,7 +32,7 @@ def install():
             run("pip install requests invoke")
 
     require.supervisor.process('rview_client',
-        command='%s/bin/inv start -p bigpasswordWow' % home,
+        command='%s/bin/inv start --ctype=%s -p bigpasswordWow' % (home, ctype),
         directory=home,
         user=env.user,
         stopsignal='INT',
